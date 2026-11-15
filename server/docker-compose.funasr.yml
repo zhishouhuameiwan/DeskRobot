@@ -1,0 +1,6 @@
+# 仅"本地语音识别"模式使用（没有填 DASHSCOPE_API_KEY 时由 deploy.sh 自动启用）。
+# 把 SenseVoiceSmall 模型文件挂进容器；模型约 900MB，服务器建议 4G 内存。
+services:
+  xiaozhi-esp32-server:
+    volumes:
+      - ./models/SenseVoiceSmall/model.pt:/opt/xiaozhi-esp32-server/models/SenseVoiceSmall/model.pt

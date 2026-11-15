@@ -1,0 +1,9 @@
+# Mercury 固件配置片段：叠加在 xiaozhi-esp32 自带的 sdkconfig.defaults 之上。
+# 唤醒词和服务器地址由 build_firmware.py 追加，不要写在这里。
+
+# 板型：立创·实战派 ESP32-S3
+CONFIG_BOARD_TYPE_LICHUANG_DEV_S3=y
+# 界面语言：简体中文
+CONFIG_LANGUAGE_ZH_CN=y
+# 设备端回声消除：Mercury 说话时也能被打断
+CONFIG_USE_DEVICE_AEC=y

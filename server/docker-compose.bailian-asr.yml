@@ -1,0 +1,7 @@
+# 仅在百炼 Key 需要走专属接入地址（Token Plan / 业务空间）时由 deploy.sh 自动启用。
+# 后端 0.9.8 把百炼流式识别的地址写死成默认地址；deploy.sh 会从镜像里取出这个文件，
+# 只把地址那一行改成"读配置里的 ws_url"，存到 data/patches/ 再挂回容器。
+services:
+  xiaozhi-esp32-server:
+    volumes:
+      - ./data/patches/aliyunbl_stream.py:/opt/xiaozhi-esp32-server/core/providers/asr/aliyunbl_stream.py:ro

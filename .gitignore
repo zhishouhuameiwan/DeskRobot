@@ -1,0 +1,15 @@
+node_modules/
+
+# 密钥和运行时数据：绝不入库
+server/.env
+server/data/
+server/models/
+
+# 生成物
+character/out/
+firmware/generated/
+
+# 第三方固件源码单独克隆
+firmware/xiaozhi-esp32/
+
+__pycache__/

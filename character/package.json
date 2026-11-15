@@ -1,0 +1,12 @@
+{
+  "name": "mercury-character",
+  "private": true,
+  "type": "module",
+  "description": "温度计宠物 Mercury 的表情素材生成器（原创形象）",
+  "scripts": {
+    "build": "node gen-faces.mjs"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}

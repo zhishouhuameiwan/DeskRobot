@@ -1,0 +1,39 @@
+# Mercury 的服务端：小智开源后端（xiaozhi-esp32-server） + nginx 网关
+# 后端的 8000(WebSocket) / 8003(OTA、看图) 端口不对公网开放，
+# 只有带着 SECRET_PATH 的请求才能经网关进来。
+services:
+  xiaozhi-esp32-server:
+    image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:server_latest
+    container_name: xiaozhi-esp32-server
+    restart: always
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - TZ=Asia/Shanghai
+    expose:
+      - "8000"
+      - "8003"
+    volumes:
+      # 配置、提示词模板、记忆文件
+      - ./data:/opt/xiaozhi-esp32-server/data
+      # 儿歌/故事音频，放 mp3 进去就能"Mercury，放首歌"
+      - ./music:/opt/xiaozhi-esp32-server/music
+      # 自己写的两个语音模块：对接百炼原生 HTTP 接口（Token Plan 套餐的 qwen-audio 模型用）。
+      # 后端按"类型名.py"找模块，配置里 type: bailian_http 时才会用到，平时挂着不影响别的方案。
+      - ./providers/bailian_http_asr.py:/opt/xiaozhi-esp32-server/core/providers/asr/bailian_http.py:ro
+      - ./providers/bailian_http_tts.py:/opt/xiaozhi-esp32-server/core/providers/tts/bailian_http.py:ro
+      # 养成：教 Mercury 东西、好习惯小约定、攒星星换配饰。成长记录存在 data/mercury_growth/
+      - ./plugins/mercury_growth.py:/opt/xiaozhi-esp32-server/plugins_func/functions/mercury_growth.py:ro
+
+  gateway:
+    image: ${NGINX_IMAGE:-nginx:1.27-alpine}
+    container_name: mercury-gateway
+    restart: always
+    depends_on:
+      - xiaozhi-esp32-server
+    environment:
+      - SECRET_PATH=${SECRET_PATH:?先运行 deploy.sh 生成 SECRET_PATH}
+    ports:
+      - "${GATEWAY_PORT:-18080}:80"
+    volumes:
+      - ./gateway/default.conf.template:/etc/nginx/templates/default.conf.template:ro
